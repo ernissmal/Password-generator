@@ -1,5 +1,20 @@
 import random
 import string
+import sqlite3
+from hashlib import sha256
+
+# Connect to the SQLite database
+conn = sqlite3.connect('passwords.db')
+cursor = conn.cursor()
+
+# Create a table to store passwords
+cursor.execute('''
+    CREATE TABLE IF NOT EXISTS passwords (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        password TEXT
+    )
+''')
+conn.commit()
 
 def generate_password(length, use_special_chars, use_digits, use_lowercase_chars, use_uppercase_chars):
     characters = ''
@@ -15,6 +30,15 @@ def generate_password(length, use_special_chars, use_digits, use_lowercase_chars
         raise ValueError("No characters selected")
     password = ''.join(random.choice(characters) for _ in range(length))
     return password
+
+def encrypt_password(password):
+    hashed_password = sha256(password.encode()).hexdigest()
+    return hashed_password
+
+def save_password_to_database(encrypted_password):
+    cursor.execute("INSERT INTO passwords (password) VALUES (?)", (encrypted_password,))
+    conn.commit()
+    print("Password saved to the database.")
 
 def get_confirmation(prompt):
     while True:
@@ -46,12 +70,20 @@ while not valid_chars:
     use_digits = get_confirmation("Use digits? Y/N ")
     use_lowercase_chars = get_confirmation("Use lowercase characters? Y/N ")
     use_uppercase_chars = get_confirmation("Use uppercase characters? Y/N ")
-    
+
     if any([use_lowercase_chars, use_uppercase_chars, use_special_chars, use_digits]):
         valid_chars = True
+        break
     else:
         print("You must select at least one character type to generate a secure password!")
 
 # Generate and print the password
 password = generate_password(length, use_special_chars, use_digits, use_lowercase_chars, use_uppercase_chars)
 print(f"Generated password: {password}")
+
+# Encrypt and save the password to the database
+encrypted_password = encrypt_password(password)
+save_password_to_database(encrypted_password)
+
+# Close the database connection
+conn.close()
