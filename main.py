@@ -1,44 +1,57 @@
-import string
 import random
-import tkinter as tk
-from tkinter import messagebox
+import string
 
-def generate_password():
-    length = length_entry.get()
-    if not length.isdigit():
-        messagebox.showerror("Error", "Password length should be a positive integer.")
-        return
-
-    length = int(length)
-    if length < 8:
-        messagebox.showerror("Error", "Password length should be at least 8 characters.")
-        return
-
-    characters = string.ascii_letters + string.digits + string.punctuation
+def generate_password(length, use_special_chars, use_digits, use_lowercase_chars, use_uppercase_chars):
+    characters = ''
+    if use_lowercase_chars:
+        characters += string.ascii_lowercase
+    if use_uppercase_chars:
+        characters += string.ascii_uppercase
+    if use_digits:
+        characters += string.digits
+    if use_special_chars:
+        characters += string.punctuation
+    if not characters:
+        raise ValueError("No characters selected")
     password = ''.join(random.choice(characters) for _ in range(length))
-    password_entry.delete(0, tk.END)
-    password_entry.insert(tk.END, password)
+    return password
 
-# Create the main window
-window = tk.Tk()
-window.title("Password Generator")
-window.configure(bg="white")  # Set white background color
+def get_confirmation(prompt):
+    while True:
+        try:
+            response = input(prompt).lower()
+            if response in ['y', 'n']:
+                return response == 'y'
+            else:
+                print("Invalid input, please enter 'Y' or 'N'.")
+        except ValueError:
+            print("Invalid input, please enter 'Y' or 'N'.")
 
-# Create a label and entry for password length
-length_label = tk.Label(window, text="Password Length:", bg="white")  # Set white background color
-length_label.pack()
-length_entry = tk.Entry(window, bg="white")  # Set white background color
-length_entry.pack()
+# Validate password length
+valid_length = False
+while not valid_length:
+    try:
+        length = int(input("Enter the desired password length: "))
+        if length > 0:
+            valid_length = True
+        else:
+            print("Password length must be greater than zero.")
+    except ValueError:
+        print("Invalid input, please enter a valid number.")
 
-# Create a button to generate password
-generate_button = tk.Button(window, text="Generate Password", command=generate_password)
-generate_button.pack()
+# Validate character types selection
+valid_chars = False
+while not valid_chars:
+    use_special_chars = get_confirmation("Use special characters? Y/N ")
+    use_digits = get_confirmation("Use digits? Y/N ")
+    use_lowercase_chars = get_confirmation("Use lowercase characters? Y/N ")
+    use_uppercase_chars = get_confirmation("Use uppercase characters? Y/N ")
+    
+    if any([use_lowercase_chars, use_uppercase_chars, use_special_chars, use_digits]):
+        valid_chars = True
+    else:
+        print("You must select at least one character type to generate a secure password!")
 
-# Create a label and entry to display the generated password
-password_label = tk.Label(window, text="Generated Password:", bg="white")  # Set white background color
-password_label.pack()
-password_entry = tk.Entry(window, bg="white")  # Set white background color
-password_entry.pack()
-
-# Start the main event loop
-window.mainloop()
+# Generate and print the password
+password = generate_password(length, use_special_chars, use_digits, use_lowercase_chars, use_uppercase_chars)
+print(f"Generated password: {password}")
