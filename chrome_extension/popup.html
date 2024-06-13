@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <style>
+        body { width: 200px; }
+    </style>
+</head>
+<body>
+    <h3>Generate Password</h3>
+    <form id="passwordForm">
+        <label for="length">Length:</label>
+        <input type="number" id="length" name="length" value="12" min="1">
+        <br><br>
+        <label for="uppercase">Include Uppercase:</label>
+        <input type="checkbox" id="uppercase" name="uppercase" checked>
+        <br><br>
+        <label for="digits">Include Digits:</label>
+        <input type="checkbox" id="digits" name="digits" checked>
+        <br><br>
+        <label for="symbols">Include Symbols:</label>
+        <input type="checkbox" id="symbols" name="symbols" checked>
+        <br><br>
+        <label for="algorithm">Algorithm:</label>
+        <br>
+        <input type="radio" id="random" name="algorithm" value="Random Characters" checked>
+        <label for="random">Random Characters</label><br>
+        <input type="radio" id="memorable" name="algorithm" value="Memorable Words">
+        <label for="memorable">Memorable Words</label><br>
+        <input type="radio" id="hexadecimal" name="algorithm" value="Hexadecimal">
+        <label for="hexadecimal">Hexadecimal</label><br>
+        <input type="radio" id="base64" name="algorithm" value="Base64">
+        <label for="base64">Base64</label><br>
+        <input type="radio" id="pronounceable" name="algorithm" value="Pronounceable">
+        <label for="pronounceable">Pronounceable</label><br>
+        <input type="radio" id="pin" name="algorithm" value="PIN">
+        <label for="pin">PIN</label><br>
+        <input type="radio" id="alphanumeric" name="algorithm" value="Alphanumeric">
+        <label for="alphanumeric">Alphanumeric</label><br>
+        <br><br>
+        <button type="button" id="generate">Generate</button>
+    </form>
+    <p id="password"></p>
+    <button type="button" id="fill">Fill Password</button>
+    <script src="popup.js"></script>
+</body>
+</html>
