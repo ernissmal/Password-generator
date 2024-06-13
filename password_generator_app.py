@@ -26,6 +26,7 @@ BoxLayout:
         id: algorithm_spinner
         text: 'Select Algorithm'
         pos_hint: {'center_x': .5}
+        on_release: app.menu_algorithms.open()
 
     MDTextField:
         id: length_input
@@ -39,16 +40,19 @@ BoxLayout:
         id: uppercase_spinner
         text: 'Include Uppercase'
         pos_hint: {'center_x': .5}
+        on_release: app.menu_uppercase.open()
 
     MDRaisedButton:
         id: digits_spinner
         text: 'Include Digits'
         pos_hint: {'center_x': .5}
+        on_release: app.menu_digits.open()
 
     MDRaisedButton:
         id: symbols_spinner
         text: 'Include Symbols'
         pos_hint: {'center_x': .5}
+        on_release: app.menu_symbols.open()
 
     MDTextField:
         id: name_input
@@ -133,7 +137,7 @@ class PasswordGeneratorApp(MDApp):
 
     def set_item(self, text_item, spinner_id):
         self.root.ids[spinner_id].text = text_item
-        getattr(self, f'menu_{spinner_id.split("_")[0]}').dismiss()
+        getattr(self, f'menu_{spinner_id.split("_")[0]}s').dismiss()
 
     def generate_password(self):
         try:
