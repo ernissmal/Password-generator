@@ -137,7 +137,14 @@ class PasswordGeneratorApp(MDApp):
 
     def set_item(self, text_item, spinner_id):
         self.root.ids[spinner_id].text = text_item
-        getattr(self, f'menu_{spinner_id.split("_")[0]}s').dismiss()
+        if spinner_id == 'algorithm_spinner':
+            self.menu_algorithms.dismiss()
+        elif spinner_id == 'uppercase_spinner':
+            self.menu_uppercase.dismiss()
+        elif spinner_id == 'digits_spinner':
+            self.menu_digits.dismiss()
+        elif spinner_id == 'symbols_spinner':
+            self.menu_symbols.dismiss()
 
     def generate_password(self):
         try:
