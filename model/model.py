@@ -1,5 +1,4 @@
-# main.py
-
+# model/model.py
 import random
 import string
 
@@ -20,15 +19,3 @@ def generate_password(length=12, use_digits=True, use_special_chars=True, use_up
     # Generate the password
     password = ''.join(random.choice(pool) for _ in range(length))
     return password
-
-def main():
-    """Main function to handle password generation and display the result."""
-    
-    # Example: Generate a password with default options
-    password = generate_password(length=12)
-
-    # Output the generated password
-    print(f"Generated password: {password}")
-
-if __name__ == "__main__":
-    main()
