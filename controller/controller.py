@@ -1,14 +1,34 @@
-# controller/controller.py
-from model.model import generate_password
-from view.view import display_password
+from model.model import generate_password, generate_passphrase, generate_spell
+from view.view import display_password, display_message
+
+
+def get_user_choice():
+    """Prompt the user to choose the type of password to generate."""
+    print("Choose an option:")
+    print("1. Generate a standard password")
+    print("2. Generate a passphrase")
+    print("3. Generate a spell-style password")
+    choice = input("Enter your choice (1/2/3): ").strip()
+
+    if choice not in ['1', '2', '3']:
+        print("Invalid choice. Please select a valid option.")
+        return get_user_choice()  # Recursively ask for input again
+
+    return choice
+
 
 def get_user_input():
-    """Get password configuration from the user."""
-    length = int(input("Enter password length: "))
-    use_digits = input("Include digits (yes/no)? ").lower() == 'yes'
-    use_special_chars = input("Include special characters (yes/no)? ").lower() == 'yes' or 'y'
-    use_uppercase = input("Include uppercase letters (yes/no)? ").lower() == 'yes' or 'y'
-    use_lowercase = input("Include lowercase letters (yes/no)? ").lower() == 'yes' or "y"
+    """Get configuration for standard password generation."""
+    try:
+        length = int(input("Enter password length: "))
+    except ValueError:
+        print("Please enter a valid number.")
+        return get_user_input()
+
+    use_digits = input("Include digits (yes/no)? ").lower() in ['yes', 'y']
+    use_special_chars = input("Include special characters (yes/no)? ").lower() in ['yes', 'y']
+    use_uppercase = input("Include uppercase letters (yes/no)? ").lower() in ['yes', 'y']
+    use_lowercase = input("Include lowercase letters (yes/no)? ").lower() in ['yes', 'y']
 
     # Ensure that at least one character category is selected
     if not any([use_digits, use_special_chars, use_uppercase, use_lowercase]):
@@ -17,13 +37,50 @@ def get_user_input():
 
     return length, use_digits, use_special_chars, use_uppercase, use_lowercase
 
+
+def get_passphrase_config():
+    """Get configuration for passphrase generation."""
+    try:
+        word_count = int(input("Enter number of words for the passphrase: "))
+    except ValueError:
+        print("Please enter a valid number.")
+        return get_passphrase_config()
+
+    delimiter = input("Enter a delimiter for the passphrase (default is '-'): ").strip()
+    if not delimiter:
+        delimiter = "-"
+    return word_count, delimiter
+
+
 def main():
     """Main function to drive the application."""
-    # Get user input for password configuration
-    length, use_digits, use_special_chars, use_uppercase, use_lowercase = get_user_input()
+    # Get user's choice for the type of password
+    choice = get_user_choice()
 
-    # Generate the password using the model
-    password = generate_password(length, use_digits, use_special_chars, use_uppercase, use_lowercase)
+    if choice == '1':
+        # Standard password generation
+        length, use_digits, use_special_chars, use_uppercase, use_lowercase = get_user_input()
+        password = generate_password(length, use_digits, use_special_chars, use_uppercase, use_lowercase)
+        display_password(password)
 
-    # Display the password using the view
-    display_password(password)
+    elif choice == '2':
+        # Passphrase generation
+        word_count, delimiter = get_passphrase_config()
+        passphrase = generate_passphrase(word_count, delimiter)
+        display_message("Generated Passphrase:")
+        display_password(passphrase)
+
+    elif choice == '3':
+        # Spell-style password generation
+        try:
+            length = int(input("Enter the length of the spell (minimum 8): "))
+            if length < 8:
+                print("Length must be at least 8 characters.")
+                return main()  # Restart the process
+        except ValueError:
+            print("Please enter a valid number.")
+            return main()
+
+        spell = generate_spell(length)
+        display_message("Generated Spell:")
+        display_password(spell)
