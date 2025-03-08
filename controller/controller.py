@@ -18,24 +18,23 @@ def get_user_choice():
 
 
 def get_user_input():
-    """Get configuration for standard password generation."""
-    try:
-        length = int(input("Enter password length: "))
-    except ValueError:
-        print("Please enter a valid number.")
-        return get_user_input()
+    while True:
+        try:
+            length = int(input("Enter password length: "))
+            break
+        except ValueError:
+            print("Please enter a valid number.")
+    
+    use_digits = input("Include digits? (yes/no): ").lower() == "yes"
+    use_special_chars = input("Include special characters? (yes/no): ").lower() == "yes"
+    use_uppercase = input("Include uppercase letters? (yes/no): ").lower() == "yes"
+    use_lowercase = input("Include lowercase letters? (yes/no): ").lower() == "yes"
 
-    use_digits = input("Include digits (yes/no)? ").lower() in ['yes', 'y']
-    use_special_chars = input("Include special characters (yes/no)? ").lower() in ['yes', 'y']
-    use_uppercase = input("Include uppercase letters (yes/no)? ").lower() in ['yes', 'y']
-    use_lowercase = input("Include lowercase letters (yes/no)? ").lower() in ['yes', 'y']
-
-    # Ensure that at least one character category is selected
     if not any([use_digits, use_special_chars, use_uppercase, use_lowercase]):
         print("You must select at least one character type (digits, special chars, uppercase, lowercase).")
-        return get_user_input()  # Recursively ask for input again
-
-    return length, use_digits, use_special_chars, use_uppercase, use_lowercase
+        return get_user_input()  # This is the only recursive call left
+    
+    return (length, use_digits, use_special_chars, use_uppercase, use_lowercase)
 
 
 def get_passphrase_config():
