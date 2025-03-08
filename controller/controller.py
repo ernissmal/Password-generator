@@ -3,6 +3,26 @@ from model.model import generate_password, generate_passphrase, generate_spell
 from view.view import display_password, display_message
 
 
+def generate_and_display_password():
+    """Generate a password based on user choice and display it."""
+    choice = get_user_choice()
+    
+    if choice == '1':
+        length = validate_numeric_input("Enter password length: ", 8)
+        include_symbols = validate_yes_no_input("Include symbols? (yes/no): ")
+        password = generate_password(length, include_symbols)
+        display_password(password)
+    elif choice == '2':
+        words = validate_numeric_input("Enter number of words: ", 3)
+        separator = input("Enter word separator (press Enter for space): ") or " "
+        passphrase = generate_passphrase(words, separator)
+        display_password(passphrase)
+    elif choice == '3':
+        length = validate_numeric_input("Enter spell length: ", 6)
+        spell = generate_spell(length)
+        display_password(spell)
+
+
 def validate_numeric_input(prompt, minimum=None, max_attempts=5):
     """Validate numeric input with optional minimum value and rate limiting."""
     attempts = 0
