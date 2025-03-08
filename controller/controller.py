@@ -86,3 +86,7 @@ def get_user_choice(max_attempts=5):
     
     display_message("Too many invalid attempts. Please try again later.")
     exit(1)
+def main():
+    """Main function for the password generator application."""
+    display_message("Welcome to the Password Generator!")
+    generate_and_display_password()
