@@ -1,12 +1,16 @@
 import secrets
 import string
 import os
+from dotenv import load_dotenv
+
+# Load environment variables
+load_dotenv()
 
 # App version
 VERSION = "3.3"
 
 # Path to the word list
-WORD_LIST_PATH = os.path.join(os.path.dirname(__file__), "../data/words.txt")
+WORD_LIST_PATH = os.path.join(os.path.dirname(__file__), "..", os.getenv("DICTIONARY_PATH"))
 
 
 def load_word_list():
